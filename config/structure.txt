@@ -1,0 +1,31 @@
+group: [
+	from: string
+	to: [
+		emailAddress: string
+	]
+	emailContent: string
+]
+
+
+
+C: Welcome to EmailPranker !
+C: Enter a valid mail address of one of you victim (at least 2)
+U: coucou
+C: ERROR. Enter a valid mail address of one of you victim (at least 2)
+U: coucou@hotmail.com
+C: ADDED. Enter a valid mail address of one of you victim (at least 2)
+U: coucou2@hotmail.com
+C: ADDED. Enter a valid mail address of one of you victim (send empty line to finish)
+U:
+C: How many group do you wish to create ? (Range: [1,1]) // [1, nb_victims / nb_group]
+U: 2
+C: ERROR. How many group do you wish to create ? (Range: [1,1])
+U: 1
+C: ADDED. Give filepath of you list of prank emails (format .json)
+U: ./path/forgedEmail.json
+C: Who is the sender of group i ? (Enter valid address mail)
+U: bob@user.com
+C: ADDED ...
+C: DONE
+C: Sending emails.....
+C: DONE
