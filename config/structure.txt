@@ -6,6 +6,27 @@ group: [
 	emailContent: string
 ]
 
+config: [
+    srv_ip: ip
+    srv_port: port
+    mail: mail_path
+    group: group_path
+]
+
+groups
+    group1.json
+    group2.json
+
+email
+    email1.txt
+    email2.txt
+
+config
+    config1.json
+
+
+Pas besoins d'interraction via cli
+
 
 
 C: Welcome to EmailPranker !

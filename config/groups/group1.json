@@ -1,0 +1,6 @@
+{
+  "mail_from": "jacques@coucou.ch",
+  "mail_to": [
+    "coucou@coucou.ch","salut@bonjour.ch", "hello@tcho.ch"
+  ]
+}
