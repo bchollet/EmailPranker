@@ -47,7 +47,8 @@ public class Client {
             System.out.println("Connexion success");
 
             //EHLO
-            out.write("EHLO heig-vd.ch\r\n");
+            //TODO : remplacer domaine par domaine de l'adressse mail from
+            out.write("EHLO dai.ch\r\n");
             out.flush();
 
             //TODO : Factoriser
@@ -101,6 +102,16 @@ public class Client {
 
             //DATA
             out.write("DATA\r\nContent-Type: text/plain; charset=utf-8\r\n");
+            out.flush();
+            out.write("From: <" + grp.mail_from + ">\r\n");
+            out.flush();
+            out.write("To: ");
+            for(int i = 0; i < grp.mail_to.length; ++i ){
+                if(i != grp.mail_to.length - 1)
+                    out.write("<" + grp.mail_to[i] + ">, ");
+                else
+                    out.write("<" + grp.mail_to[i] + ">\r\n");
+            }
             out.flush();
             out.write(Files.readString(Path.of(conf.mail_path)));
             out.flush();
