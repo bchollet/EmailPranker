@@ -13,6 +13,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Main {
     public static void main(String[] args) {
+        // Variables
         Gson gson = new Gson();
         Config conf;
         List<Group> grps = new ArrayList<>();
@@ -20,6 +21,7 @@ public class Main {
         EmailPrankerRunner epr;
 
         try {
+            //Parsing json config files
             conf = gson.fromJson(readString(Path.of(".\\config\\config.json")), Config.class);
             File groupFolder = new File(conf.group_path);
             File emailFolder = new File(conf.mail_path);
@@ -28,11 +30,16 @@ public class Main {
             }
             List<File> emails = new ArrayList<>(List.of(requireNonNull(emailFolder.listFiles())));
 
+            //Connecting to server
             clientSocket = new Socket(conf.srv_ip, conf.srv_port);
-            epr = new EmailPrankerRunner(clientSocket, grps, emails, conf.ehlo_msg);
 
+            //Running Pranker
+            epr = new EmailPrankerRunner(clientSocket, grps, emails, conf.ehlo_msg);
             epr.sendPrank();
-        } catch (JsonSyntaxException jse) {
+
+        }
+        //Exception handling
+        catch (JsonSyntaxException jse) {
             System.out.println("ERROR when parsing JSON: " + jse.getMessage());
         } catch (IOException ioe) {
             System.out.println("ERROR IO: " + ioe.getMessage());

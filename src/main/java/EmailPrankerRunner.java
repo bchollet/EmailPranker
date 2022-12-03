@@ -14,6 +14,14 @@ public class EmailPrankerRunner {
     private final BufferedWriter out;
     private final BufferedReader in;
 
+    /**
+     * default constructor for EmailPranker
+     * @param clientSocket The client socket
+     * @param grps The list of the differents victim groups
+     * @param emails The list of pranked emails
+     * @param ehloMsg The domain send to SMTP server on EHLO command
+     * @throws IOException When getting an incorrect in/output stream from client socket
+     */
     public EmailPrankerRunner(Socket clientSocket, List<Group> grps, List<File> emails, String ehloMsg) throws IOException {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
         out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
@@ -22,6 +30,9 @@ public class EmailPrankerRunner {
         this.ehloMsg = ehloMsg;
     }
 
+    /**
+     * Use to send prank based on attribute sent to constructor
+     */
     public void sendPrank() {
         try {
             readSrvResponse(StatusCodes.READY);
@@ -53,7 +64,11 @@ public class EmailPrankerRunner {
         }
     }
 
-    public void ehloPhase() throws IOException {
+    /**
+     * EHLO command in SMTP protocol
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
+    private void ehloPhase() throws IOException {
         out.write("EHLO " + ehloMsg + "\r\n");
         out.flush();
 
@@ -62,7 +77,12 @@ public class EmailPrankerRunner {
         }
     }
 
-    public void mailFromPhase(Group grp) throws IOException {
+    /**
+     * MAIL FROM command in SMTP protocol
+     * @param grp The group where the sender is from
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
+    private void mailFromPhase(Group grp) throws IOException {
         if (!EMAIL_REGEX.matcher(grp.mail_from).find()) {
             throw new IOException(grp.mail_from + " is not a valid email address");
         }
@@ -73,7 +93,12 @@ public class EmailPrankerRunner {
         readSrvResponse(StatusCodes.OK);
     }
 
-    public void rcptToPhase(Group grp) throws IOException {
+    /**
+     * RCPT TO command in SMTP protocol
+     * @param grp The group where the victims are from
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
+    private void rcptToPhase(Group grp) throws IOException {
         for(String mt : grp.mail_to){
             if(!EMAIL_REGEX.matcher(mt).find()){
                 throw new IOException(mt + " is not a valid email address");
@@ -86,7 +111,12 @@ public class EmailPrankerRunner {
         }
     }
 
-    public void dataPhase(Group grp) throws IOException {
+    /**
+     * DATA command in SMTP protocol
+     * @param grp The group that is concerned by the command
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
+    private void dataPhase(Group grp) throws IOException {
         Random rand = new Random();
         String subject;
         File randomMail = emails.get(rand.nextInt(emails.size()));
@@ -108,17 +138,26 @@ public class EmailPrankerRunner {
         readSrvResponse(StatusCodes.OK);
     }
 
-    public void disconnectPhase() throws IOException {
+    /**
+     * Disconnect from the SMTP server
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
+    private void disconnectPhase() throws IOException {
         out.write("quit\r\n");
         out.flush();
 
         readSrvResponse(StatusCodes.BYE);
     }
 
+    /**
+     * Read server response
+     * @param expectedStatus The SMTP status code expected on the server response
+     * @throws IOException On IO exception and on server response Invalid (SMTP status code > 400)
+     */
     private void readSrvResponse(StatusCodes expectedStatus) throws IOException {
         String srv_response = in.readLine();
         if(!srv_response.startsWith(expectedStatus.value)){
-            throw new IOException(srv_response);
+            throw new RuntimeException(srv_response);
         }
     }
 }
