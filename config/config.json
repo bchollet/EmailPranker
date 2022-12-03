@@ -1,6 +1,6 @@
 {
  "srv_ip": "127.0.0.1",
  "srv_port": 25000,
- "mail_path": ".\\config\\emails\\email1.txt",
- "group_path": ".\\config\\groups\\group1.json"
+ "mail_path": ".\\config\\emails",
+ "group_path": ".\\config\\groups"
 }
