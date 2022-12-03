@@ -49,17 +49,17 @@ public class EmailPrankerRunner {
             disconnectPhase();
             System.out.println("Prank success");
         } catch (IOException ioe) {
-            System.out.println("Prank failed. Exception raised: " + ioe.getMessage());
+            System.out.println("Prank failed. Exception raised: " + ioe);
         } finally {
             try {
                 if (out != null) out.close();
             } catch (IOException ex) {
-                System.out.println("Something went wrong while closing BufferedWriter: " + ex.getMessage());
+                System.out.println("Something went wrong while closing BufferedWriter: " + ex);
             }
             try {
                 if (in != null) in.close();
             } catch (IOException ex) {
-                System.out.println("Something went wrong while closing BufferedReader: " + ex.getMessage());
+                System.out.println("Something went wrong while closing BufferedReader: " + ex);
             }
         }
     }

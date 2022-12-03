@@ -42,12 +42,12 @@ public class Main {
         catch (JsonSyntaxException jse) {
             System.out.println("ERROR when parsing JSON: " + jse.getMessage());
         } catch (IOException ioe) {
-            System.out.println("ERROR IO: " + ioe.getMessage());
+            System.out.println("ERROR IO: " + ioe);
         } finally {
             try {
                 if (clientSocket != null && !clientSocket.isClosed()) clientSocket.close();
             } catch (IOException ex) {
-                System.out.println("Something went wrong : " + ex.getMessage());
+                System.out.println("Something went wrong : " + ex);
             }
         }
     }
