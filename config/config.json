@@ -2,5 +2,6 @@
  "srv_ip": "127.0.0.1",
  "srv_port": 25000,
  "mail_path": ".\\config\\emails",
- "group_path": ".\\config\\groups"
+ "group_path": ".\\config\\groups",
+ "ehlo_msg": "heig-vd.ch"
 }

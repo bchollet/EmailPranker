@@ -16,7 +16,7 @@ public class Main {
         Gson gson = new Gson();
         Config conf;
         List<Group> grps = new ArrayList<>();
-        Socket clientSocket;
+        Socket clientSocket = null;
         EmailPrankerRunner epr;
 
         try {
@@ -29,13 +29,19 @@ public class Main {
             List<File> emails = new ArrayList<>(List.of(requireNonNull(emailFolder.listFiles())));
 
             clientSocket = new Socket(conf.srv_ip, conf.srv_port);
-            epr = new EmailPrankerRunner(clientSocket, grps, emails);
+            epr = new EmailPrankerRunner(clientSocket, grps, emails, conf.ehlo_msg);
 
             epr.sendPrank();
         } catch (JsonSyntaxException jse) {
-            System.out.println("Something went wrong when parsing JSON: " + jse.getMessage());
+            System.out.println("ERROR when parsing JSON: " + jse.getMessage());
         } catch (IOException ioe) {
-            System.out.println("An exception has raised: " + ioe.getMessage());
+            System.out.println("ERROR IO: " + ioe.getMessage());
+        } finally {
+            try {
+                if (clientSocket != null && !clientSocket.isClosed()) clientSocket.close();
+            } catch (IOException ex) {
+                System.out.println("Something went wrong : " + ex.getMessage());
+            }
         }
     }
 }

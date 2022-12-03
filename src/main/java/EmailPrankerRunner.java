@@ -1,5 +1,3 @@
-import com.google.gson.JsonSyntaxException;
-
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
@@ -12,34 +10,51 @@ public class EmailPrankerRunner {
     private static final Pattern EMAIL_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
     private final List<Group> grps;
     private final List<File> emails;
+    private final String ehloMsg;
     private final BufferedWriter out;
     private final BufferedReader in;
 
-    public EmailPrankerRunner(Socket clientSocket, List<Group> grps, List<File> emails) throws JsonSyntaxException, IOException {
+    public EmailPrankerRunner(Socket clientSocket, List<Group> grps, List<File> emails, String ehloMsg) throws IOException {
         in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream(), StandardCharsets.UTF_8));
         out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream(), StandardCharsets.UTF_8));
         this.grps = grps;
         this.emails = emails;
+        this.ehloMsg = ehloMsg;
     }
 
-    public void sendPrank() throws IOException {
-        readSrvResponse(StatusCodes.READY);
-        ehloPhase();
-        System.out.println("EHLO success");
-        for (Group grp : grps) {
-            mailFromPhase(grp);
-            System.out.println("MAIL success ");
-            rcptToPhase(grp);
-            System.out.println("RCPT success");
-            dataPhase(grp);
-            System.out.println("DATA success");
+    public void sendPrank() {
+        try {
+            readSrvResponse(StatusCodes.READY);
+            ehloPhase();
+            System.out.println("EHLO success");
+            for (Group grp : grps) {
+                mailFromPhase(grp);
+                System.out.println("MAIL success ");
+                rcptToPhase(grp);
+                System.out.println("RCPT success");
+                dataPhase(grp);
+                System.out.println("DATA success");
+            }
+            disconnectPhase();
+            System.out.println("Prank success");
+        } catch (IOException ioe) {
+            System.out.println("Prank failed. Exception raised: " + ioe.getMessage());
+        } finally {
+            try {
+                if (out != null) out.close();
+            } catch (IOException ex) {
+                System.out.println("Something went wrong while closing BufferedWriter: " + ex.getMessage());
+            }
+            try {
+                if (in != null) in.close();
+            } catch (IOException ex) {
+                System.out.println("Something went wrong while closing BufferedReader: " + ex.getMessage());
+            }
         }
-        disconnectPhase();
-        System.out.println("Prank success");
     }
 
     public void ehloPhase() throws IOException {
-        out.write("EHLO heig-vd.ch\r\n");
+        out.write("EHLO " + ehloMsg + "\r\n");
         out.flush();
 
         for (int i = 0; i < 3; i++) {
@@ -86,9 +101,7 @@ public class EmailPrankerRunner {
         out.write("From:" + grp.mail_from + "\r\n"
                 + "To:" + Arrays.toString(grp.mail_to).replace("[","").replace("]","") + "\r\n"
                 + "Subject:=?utf-8?B?" + Base64.getEncoder().encodeToString(subject.getBytes()) + "?=\r\n");
-        out.flush();
         out.write(Files.readString(Path.of(randomMail.toURI())));
-        out.flush();
         out.write("\r\n.\r\n");
         out.flush();
 
@@ -104,7 +117,6 @@ public class EmailPrankerRunner {
 
     private void readSrvResponse(StatusCodes expectedStatus) throws IOException {
         String srv_response = in.readLine();
-        System.out.println(srv_response);
         if(!srv_response.startsWith(expectedStatus.value)){
             throw new IOException(srv_response);
         }
