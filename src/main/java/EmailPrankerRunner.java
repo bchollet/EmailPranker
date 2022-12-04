@@ -39,8 +39,12 @@ public class EmailPrankerRunner {
             ehloPhase();
             System.out.println("EHLO success");
             for (Group grp : grps) {
+                if(grp.mail_to.length < 2){
+                    System.out.println("Group skipped, too few recipient email");
+                    continue;
+                }
                 mailFromPhase(grp);
-                System.out.println("MAIL success ");
+                System.out.println("MAIL success");
                 rcptToPhase(grp);
                 System.out.println("RCPT success");
                 dataPhase(grp);

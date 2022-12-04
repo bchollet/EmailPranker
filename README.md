@@ -106,12 +106,11 @@ devriez voir les mails envoyés sur votre serveur en local.
 # Implémentation
 Puisque la contrainte majeur était de réaliser l'application en s'assurant de ne disposer d'aucune valeur inscrite en
 dur mais via des fichiers de configurations, nous avons opté pour l'installation de la librairie Gson de Google, nous
-obligeant par la même occasion de réaliser un projet maven. <br>
-Dès lors, la suite de notre application se découpe en plusieurs classes dont les suivantes servent essentiellement au
-mapping .json <=> Class java :
-
-- Config
-- Group
+obligeant par la même occasion à réaliser un projet maven. <br>
+Dès lors, la suite de notre application se découpe en plusieurs classes. Tout d'abord, nous utilisons les classes "Config"
+et "Group" pour "convertir" nos fichiers json en objets. En effet, du moment que ces classes répondent à certains critères
+(notamment que tous les attributs soient public), la librairie gson offre une fonction permettant de "mapper" un json et 
+sa classe correspondante.
 
 En ce qui concerne les mails, nous avons préféré l'utilisation simple de fichiers texte, tout en faisant le choix
 d'interpréter la première ligne d'un mail comme étant le sujet.
