@@ -40,7 +40,7 @@ public class EmailPrankerRunner {
             System.out.println("EHLO success");
             for (Group grp : grps) {
                 if(grp.mail_to.length < 2){
-                    System.out.println("Group skipped, too few recipient email");
+                    System.out.println("Group skipped, too few recipient email -> a group must have at least two mail_to entries");
                     continue;
                 }
                 mailFromPhase(grp);
