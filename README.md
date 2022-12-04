@@ -125,8 +125,9 @@ Il doit également initialisé le socket de communication TCP.
 
 ### EmailPrankerRunner 
 Au final, c'est cette classe qui execute l'attaque.
-Elle récupère toutes les informations nécessaires de Main (passés en paramètre à la fonction sendPrank()) et s'occupe
-de forger un courrier en passant par toutes les étapes d'une communication SMTP (EHLO, MAIL FROM, ...)
+Elle récupère toutes les informations nécessaires de Main (passés en paramètre au constructeur EmailPrankerRunner) et s'occupe
+de forger un courrier en passant par toutes les étapes d'une communication SMTP (EHLO, MAIL FROM, ...).
+La fonction sendPrank est utilisé pour piloter ce processus.
 Toutes ces étapes sont séparées dans des fonctions afin de facilité le debugging.
 La fonction readSrvResponse(), quant à elle, est utilisée pour récupérer les valeurs retournées par le serveur MockMock
 et les comparer avec les réponses attendues (stockées dans la classe StatusCodes). 
