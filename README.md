@@ -104,7 +104,7 @@ Pour ce faire, ouvrez une invite de commande où se trouve votre ```emailPranker
 devriez voir les mails envoyés sur votre serveur en local.
 
 # Implémentation
-### Config JSON
+### Config JSON 
 Puisque la contrainte majeur était de réaliser l'application en s'assurant de ne disposer d'aucune valeur inscrite en
 dur mais via des fichiers de configurations, nous avons opté pour l'installation de la librairie Gson de Google, nous
 obligeant par la même occasion à réaliser un projet maven. <br>
@@ -113,17 +113,17 @@ et "Group" pour "convertir" nos fichiers json en objets. En effet, du moment que
 (notamment que tous les attributs soient public), la librairie gson offre une fonction permettant de "mapper" un json et 
 sa classe correspondante.
 
-### Mails
+### Mails 
 En ce qui concerne les mails, nous avons préféré l'utilisation simple de fichiers texte, tout en faisant le choix
 d'interpréter la première ligne d'un mail comme étant le sujet.
 
-###Main
+###Main 
 Cette classe contient le programme main() qui sera executé au lancement de notre programme. Son rôle est de parser le fichier
 de configuration initialisé par l'utilisateur et créer les objets qui en découlent (groupes, liste emails, ...) 
 pour pouvoir les envoyer à EmailPrankRunner.
 Il doit également initialisé le socket de communication TCP.
 
-###EmailPrankerRunner
+###EmailPrankerRunner 
 Au final, c'est cette classe qui execute l'attaque.
 Elle récupère toutes les informations nécessaires de Main (passés en paramètre à la fonction sendPrank()) et s'occupe
 de forger un courrier en passant par toutes les étapes d'une communication SMTP (EHLO, MAIL FROM, ...)
