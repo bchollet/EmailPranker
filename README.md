@@ -117,13 +117,13 @@ sa classe correspondante.
 En ce qui concerne les mails, nous avons préféré l'utilisation simple de fichiers texte, tout en faisant le choix
 d'interpréter la première ligne d'un mail comme étant le sujet.
 
-###Main 
+### Main 
 Cette classe contient le programme main() qui sera executé au lancement de notre programme. Son rôle est de parser le fichier
 de configuration initialisé par l'utilisateur et créer les objets qui en découlent (groupes, liste emails, ...) 
 pour pouvoir les envoyer à EmailPrankRunner.
 Il doit également initialisé le socket de communication TCP.
 
-###EmailPrankerRunner 
+### EmailPrankerRunner 
 Au final, c'est cette classe qui execute l'attaque.
 Elle récupère toutes les informations nécessaires de Main (passés en paramètre à la fonction sendPrank()) et s'occupe
 de forger un courrier en passant par toutes les étapes d'une communication SMTP (EHLO, MAIL FROM, ...)
